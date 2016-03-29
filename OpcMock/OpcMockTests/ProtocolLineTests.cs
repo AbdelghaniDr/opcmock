@@ -66,5 +66,61 @@ namespace OpcMock.Tests
         {
             ProtocolLine protocolLine = new ProtocolLine("Dummy");
         }
+
+        [TestMethod()]
+        public void Equals_Method_OK_For_Equal_Protocol_Lines()
+        {
+            ProtocolLine pl1 = new ProtocolLine("Set;tagPath1;tagValue1;192");
+            ProtocolLine pl2 = new ProtocolLine("Set;tagPath1;tagValue1;192");
+
+            Assert.IsTrue(pl1.Equals(pl2));
+        }
+
+        [TestMethod]
+        public void Equals_Method_OK_For_UnEqual_Protocol_Lines()
+        {
+            ProtocolLine pl1 = new ProtocolLine("Set;tagPath1;tagValue1;192");
+
+            ProtocolLine pl2 = new ProtocolLine("Dummy;tagPath1;tagValue1;192");
+            Assert.IsFalse(pl1.Equals(pl2));
+
+            pl2 = new ProtocolLine("Set;tagPath2;tagValue1;192");
+            Assert.IsFalse(pl1.Equals(pl2));
+
+            pl2 = new ProtocolLine("Set;tagPath1;tagValue2;192");
+            Assert.IsFalse(pl1.Equals(pl2));
+
+            pl2 = new ProtocolLine("Set;tagPath1;tagValue1;0");
+            Assert.IsFalse(pl1.Equals(pl2));
+
+            pl2 = new ProtocolLine("Dummy;tagPath1;tagValue1;0");
+            Assert.IsFalse(pl1.Equals(pl2));
+        }
+
+        [TestMethod]
+        public void Equality_Operator_OK_For_Protocol_Lines()
+        {
+            ProtocolLine pl1 = new ProtocolLine("Set;tagPath1;tagValue1;192");
+            ProtocolLine pl2 = new ProtocolLine("Set;tagPath1;tagValue1;192");
+
+            Assert.IsTrue(pl1 == pl2);
+        }
+
+        [TestMethod]
+        public void NotEqual_Operator_OK_For_Unequal_Protocol_Lines()
+        {
+            ProtocolLine pl1 = new ProtocolLine("Set;tagPath1;tagValue1;192");
+            ProtocolLine pl2 = new ProtocolLine("Dummy;tagPath1;tagValue1;192");
+
+            Assert.IsTrue(pl1 != pl2);
+        }
+
+        [TestMethod]
+        public void ToString_Without_Parameter_Produces_Semicolon_Separated_String()
+        {
+            ProtocolLine protocolLine = new ProtocolLine("Set;tagPath;tagValue;192");
+
+            Assert.AreEqual("Set;tagPath;tagValue;192", protocolLine.ToString());
+        }
     }
 }

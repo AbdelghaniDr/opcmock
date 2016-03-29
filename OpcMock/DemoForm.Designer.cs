@@ -29,33 +29,36 @@ namespace OpcMock
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DemoForm));
             this.dgvOpcData = new System.Windows.Forms.DataGridView();
             this.TagName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TagValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TagQualityText = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.TagQualityValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.tbDataFileName = new System.Windows.Forms.TextBox();
-            this.lblDataFileName = new System.Windows.Forms.Label();
-            this.btnSaveData = new System.Windows.Forms.Button();
-            this.btnReadOpcData = new System.Windows.Forms.Button();
-            this.sfdDataFile = new System.Windows.Forms.SaveFileDialog();
+            this.btnSaveTags = new System.Windows.Forms.Button();
+            this.btnReadTags = new System.Windows.Forms.Button();
             this.lblProtocol = new System.Windows.Forms.Label();
             this.btnStep = new System.Windows.Forms.Button();
             this.rtbProtocol = new System.Windows.Forms.RichTextBox();
-            this.lblProjectPath = new System.Windows.Forms.Label();
-            this.tbProjectFilePath = new System.Windows.Forms.TextBox();
             this.sfdProjectFile = new System.Windows.Forms.SaveFileDialog();
-            this.btnSaveProjectFile = new System.Windows.Forms.Button();
-            this.lblProjectName = new System.Windows.Forms.Label();
-            this.tbProjectName = new System.Windows.Forms.TextBox();
-            this.fbdProjectPath = new System.Windows.Forms.FolderBrowserDialog();
-            this.btnFdbDialog = new System.Windows.Forms.Button();
-            this.gbProjectInformation = new System.Windows.Forms.GroupBox();
-            this.btnCreateProject = new System.Windows.Forms.Button();
+            this.btnResetProtocol = new System.Windows.Forms.Button();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.protocolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.newToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.ofdProjectFile = new System.Windows.Forms.OpenFileDialog();
+            this.lblTags = new System.Windows.Forms.Label();
+            this.saveToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cbProtocols = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.dgvOpcData)).BeginInit();
-            this.gbProjectInformation.SuspendLayout();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // dgvOpcData
@@ -67,7 +70,7 @@ namespace OpcMock
             this.TagQualityText,
             this.TagQualityValue});
             this.dgvOpcData.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
-            this.dgvOpcData.Location = new System.Drawing.Point(12, 209);
+            this.dgvOpcData.Location = new System.Drawing.Point(12, 89);
             this.dgvOpcData.Name = "dgvOpcData";
             this.dgvOpcData.Size = new System.Drawing.Size(560, 210);
             this.dgvOpcData.TabIndex = 0;
@@ -84,8 +87,8 @@ namespace OpcMock
             // 
             // TagQualityText
             // 
-            dataGridViewCellStyle3.NullValue = "Good";
-            this.TagQualityText.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle1.NullValue = "Good";
+            this.TagQualityText.DefaultCellStyle = dataGridViewCellStyle1;
             this.TagQualityText.HeaderText = "TagQualityText";
             this.TagQualityText.Name = "TagQualityText";
             this.TagQualityText.Resizable = System.Windows.Forms.DataGridViewTriState.True;
@@ -93,55 +96,35 @@ namespace OpcMock
             // 
             // TagQualityValue
             // 
-            dataGridViewCellStyle4.NullValue = "192";
-            this.TagQualityValue.DefaultCellStyle = dataGridViewCellStyle4;
             this.TagQualityValue.HeaderText = "TagQualityValue";
             this.TagQualityValue.Name = "TagQualityValue";
-            this.TagQualityValue.ReadOnly = true;
             // 
-            // tbDataFileName
+            // btnSaveTags
             // 
-            this.tbDataFileName.Location = new System.Drawing.Point(10, 128);
-            this.tbDataFileName.Name = "tbDataFileName";
-            this.tbDataFileName.Size = new System.Drawing.Size(528, 20);
-            this.tbDataFileName.TabIndex = 1;
-            this.tbDataFileName.Text = "d:\\temp\\opctest";
+            this.btnSaveTags.Enabled = false;
+            this.btnSaveTags.Location = new System.Drawing.Point(12, 309);
+            this.btnSaveTags.Name = "btnSaveTags";
+            this.btnSaveTags.Size = new System.Drawing.Size(75, 31);
+            this.btnSaveTags.TabIndex = 1;
+            this.btnSaveTags.Text = "Save tags";
+            this.btnSaveTags.UseVisualStyleBackColor = true;
+            this.btnSaveTags.Click += new System.EventHandler(this.btnSaveData_Click);
             // 
-            // lblDataFileName
+            // btnReadTags
             // 
-            this.lblDataFileName.AutoSize = true;
-            this.lblDataFileName.Location = new System.Drawing.Point(8, 112);
-            this.lblDataFileName.Name = "lblDataFileName";
-            this.lblDataFileName.Size = new System.Drawing.Size(67, 13);
-            this.lblDataFileName.TabIndex = 2;
-            this.lblDataFileName.Text = "Datafile path";
-            // 
-            // btnSaveData
-            // 
-            this.btnSaveData.Enabled = false;
-            this.btnSaveData.Location = new System.Drawing.Point(12, 429);
-            this.btnSaveData.Name = "btnSaveData";
-            this.btnSaveData.Size = new System.Drawing.Size(75, 31);
-            this.btnSaveData.TabIndex = 4;
-            this.btnSaveData.Text = "Save data";
-            this.btnSaveData.UseVisualStyleBackColor = true;
-            this.btnSaveData.Click += new System.EventHandler(this.btnSaveData_Click);
-            // 
-            // btnReadOpcData
-            // 
-            this.btnReadOpcData.Enabled = false;
-            this.btnReadOpcData.Location = new System.Drawing.Point(93, 429);
-            this.btnReadOpcData.Name = "btnReadOpcData";
-            this.btnReadOpcData.Size = new System.Drawing.Size(75, 31);
-            this.btnReadOpcData.TabIndex = 5;
-            this.btnReadOpcData.Text = "Read data";
-            this.btnReadOpcData.UseVisualStyleBackColor = true;
-            this.btnReadOpcData.Click += new System.EventHandler(this.btnReadOpcData_Click);
+            this.btnReadTags.Enabled = false;
+            this.btnReadTags.Location = new System.Drawing.Point(93, 309);
+            this.btnReadTags.Name = "btnReadTags";
+            this.btnReadTags.Size = new System.Drawing.Size(75, 31);
+            this.btnReadTags.TabIndex = 2;
+            this.btnReadTags.Text = "Read tags";
+            this.btnReadTags.UseVisualStyleBackColor = true;
+            this.btnReadTags.Click += new System.EventHandler(this.btnReadOpcData_Click);
             // 
             // lblProtocol
             // 
             this.lblProtocol.AutoSize = true;
-            this.lblProtocol.Location = new System.Drawing.Point(600, 193);
+            this.lblProtocol.Location = new System.Drawing.Point(600, 73);
             this.lblProtocol.Name = "lblProtocol";
             this.lblProtocol.Size = new System.Drawing.Size(46, 13);
             this.lblProtocol.TabIndex = 8;
@@ -150,121 +133,167 @@ namespace OpcMock
             // btnStep
             // 
             this.btnStep.Enabled = false;
-            this.btnStep.Location = new System.Drawing.Point(603, 429);
+            this.btnStep.Location = new System.Drawing.Point(603, 361);
             this.btnStep.Name = "btnStep";
             this.btnStep.Size = new System.Drawing.Size(127, 31);
-            this.btnStep.TabIndex = 12;
+            this.btnStep.TabIndex = 4;
             this.btnStep.Text = "Execute step 1";
             this.btnStep.UseVisualStyleBackColor = true;
             this.btnStep.Click += new System.EventHandler(this.btnStep_Click);
             // 
             // rtbProtocol
             // 
-            this.rtbProtocol.Location = new System.Drawing.Point(603, 209);
+            this.rtbProtocol.Location = new System.Drawing.Point(603, 145);
             this.rtbProtocol.Name = "rtbProtocol";
             this.rtbProtocol.Size = new System.Drawing.Size(287, 210);
-            this.rtbProtocol.TabIndex = 13;
+            this.rtbProtocol.TabIndex = 3;
             this.rtbProtocol.Text = "Set;tagToSet;newValue;192\nDummy\nWait;tagToWaitFor;expectedValue;192\n";
             // 
-            // lblProjectPath
+            // btnResetProtocol
             // 
-            this.lblProjectPath.AutoSize = true;
-            this.lblProjectPath.Location = new System.Drawing.Point(7, 66);
-            this.lblProjectPath.Name = "lblProjectPath";
-            this.lblProjectPath.Size = new System.Drawing.Size(64, 13);
-            this.lblProjectPath.TabIndex = 14;
-            this.lblProjectPath.Text = "Project path";
+            this.btnResetProtocol.Enabled = false;
+            this.btnResetProtocol.Location = new System.Drawing.Point(763, 361);
+            this.btnResetProtocol.Name = "btnResetProtocol";
+            this.btnResetProtocol.Size = new System.Drawing.Size(127, 31);
+            this.btnResetProtocol.TabIndex = 5;
+            this.btnResetProtocol.Text = "Reset protocol";
+            this.btnResetProtocol.UseVisualStyleBackColor = true;
+            this.btnResetProtocol.Click += new System.EventHandler(this.btnResetProtocol_Click);
             // 
-            // tbProjectFilePath
+            // menuStrip1
             // 
-            this.tbProjectFilePath.Location = new System.Drawing.Point(10, 82);
-            this.tbProjectFilePath.Name = "tbProjectFilePath";
-            this.tbProjectFilePath.Size = new System.Drawing.Size(528, 20);
-            this.tbProjectFilePath.TabIndex = 15;
-            this.tbProjectFilePath.Text = "d:\\temp\\opcmock";
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fileToolStripMenuItem,
+            this.protocolToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(908, 24);
+            this.menuStrip1.TabIndex = 23;
+            this.menuStrip1.Text = "menuStrip1";
             // 
-            // btnSaveProjectFile
+            // fileToolStripMenuItem
             // 
-            this.btnSaveProjectFile.Location = new System.Drawing.Point(727, 76);
-            this.btnSaveProjectFile.Name = "btnSaveProjectFile";
-            this.btnSaveProjectFile.Size = new System.Drawing.Size(151, 31);
-            this.btnSaveProjectFile.TabIndex = 17;
-            this.btnSaveProjectFile.Text = "Save project";
-            this.btnSaveProjectFile.UseVisualStyleBackColor = true;
-            this.btnSaveProjectFile.Click += new System.EventHandler(this.btnSaveProjectFile_Click);
+            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.newToolStripMenuItem,
+            this.openToolStripMenuItem,
+            this.saveToolStripMenuItem,
+            this.toolStripSeparator1,
+            this.exitToolStripMenuItem});
+            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.fileToolStripMenuItem.Text = "File";
             // 
-            // lblProjectName
+            // newToolStripMenuItem
             // 
-            this.lblProjectName.AutoSize = true;
-            this.lblProjectName.Location = new System.Drawing.Point(6, 16);
-            this.lblProjectName.Name = "lblProjectName";
-            this.lblProjectName.Size = new System.Drawing.Size(69, 13);
-            this.lblProjectName.TabIndex = 18;
-            this.lblProjectName.Text = "Project name";
+            this.newToolStripMenuItem.Name = "newToolStripMenuItem";
+            this.newToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.newToolStripMenuItem.Text = "New";
+            this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
             // 
-            // tbProjectName
+            // openToolStripMenuItem
             // 
-            this.tbProjectName.Location = new System.Drawing.Point(10, 32);
-            this.tbProjectName.Name = "tbProjectName";
-            this.tbProjectName.Size = new System.Drawing.Size(194, 20);
-            this.tbProjectName.TabIndex = 19;
-            this.tbProjectName.Text = "testProject001";
+            this.openToolStripMenuItem.Name = "openToolStripMenuItem";
+            this.openToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.openToolStripMenuItem.Text = "Open";
+            this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
-            // btnFdbDialog
+            // saveToolStripMenuItem
             // 
-            this.btnFdbDialog.Location = new System.Drawing.Point(544, 79);
-            this.btnFdbDialog.Name = "btnFdbDialog";
-            this.btnFdbDialog.Size = new System.Drawing.Size(45, 23);
-            this.btnFdbDialog.TabIndex = 20;
-            this.btnFdbDialog.Text = "Path";
-            this.btnFdbDialog.UseVisualStyleBackColor = true;
-            this.btnFdbDialog.Click += new System.EventHandler(this.btnFdbDialog_Click);
+            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
+            this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveToolStripMenuItem.Text = "Save";
+            this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
-            // gbProjectInformation
+            // toolStripSeparator1
             // 
-            this.gbProjectInformation.Controls.Add(this.btnCreateProject);
-            this.gbProjectInformation.Controls.Add(this.btnSaveProjectFile);
-            this.gbProjectInformation.Controls.Add(this.tbProjectName);
-            this.gbProjectInformation.Controls.Add(this.btnFdbDialog);
-            this.gbProjectInformation.Controls.Add(this.lblProjectName);
-            this.gbProjectInformation.Controls.Add(this.tbProjectFilePath);
-            this.gbProjectInformation.Controls.Add(this.tbDataFileName);
-            this.gbProjectInformation.Controls.Add(this.lblDataFileName);
-            this.gbProjectInformation.Controls.Add(this.lblProjectPath);
-            this.gbProjectInformation.Location = new System.Drawing.Point(12, 12);
-            this.gbProjectInformation.Name = "gbProjectInformation";
-            this.gbProjectInformation.Size = new System.Drawing.Size(884, 168);
-            this.gbProjectInformation.TabIndex = 21;
-            this.gbProjectInformation.TabStop = false;
-            this.gbProjectInformation.Text = "Project information";
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
             // 
-            // btnCreateProject
+            // exitToolStripMenuItem
             // 
-            this.btnCreateProject.Location = new System.Drawing.Point(727, 16);
-            this.btnCreateProject.Name = "btnCreateProject";
-            this.btnCreateProject.Size = new System.Drawing.Size(151, 31);
-            this.btnCreateProject.TabIndex = 21;
-            this.btnCreateProject.Text = "Create project";
-            this.btnCreateProject.UseVisualStyleBackColor = true;
-            this.btnCreateProject.Click += new System.EventHandler(this.btnCreateProject_Click);
+            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            this.exitToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exitToolStripMenuItem.Text = "Exit";
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+            // 
+            // protocolToolStripMenuItem
+            // 
+            this.protocolToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.newToolStripMenuItem1,
+            this.saveToolStripMenuItem1,
+            this.saveAllToolStripMenuItem});
+            this.protocolToolStripMenuItem.Name = "protocolToolStripMenuItem";
+            this.protocolToolStripMenuItem.Size = new System.Drawing.Size(64, 20);
+            this.protocolToolStripMenuItem.Text = "Protocol";
+            // 
+            // newToolStripMenuItem1
+            // 
+            this.newToolStripMenuItem1.Name = "newToolStripMenuItem1";
+            this.newToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.newToolStripMenuItem1.Text = "New";
+            this.newToolStripMenuItem1.Click += new System.EventHandler(this.newToolStripMenuItem1_Click);
+            // 
+            // ofdProjectFile
+            // 
+            this.ofdProjectFile.Filter = "OpcMock Project|*.project";
+            // 
+            // lblTags
+            // 
+            this.lblTags.AutoSize = true;
+            this.lblTags.Location = new System.Drawing.Point(12, 73);
+            this.lblTags.Name = "lblTags";
+            this.lblTags.Size = new System.Drawing.Size(31, 13);
+            this.lblTags.TabIndex = 24;
+            this.lblTags.Text = "Tags";
+            // 
+            // saveToolStripMenuItem1
+            // 
+            this.saveToolStripMenuItem1.Name = "saveToolStripMenuItem1";
+            this.saveToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.saveToolStripMenuItem1.Text = "Save";
+            this.saveToolStripMenuItem1.Click += new System.EventHandler(this.saveToolStripMenuItem1_Click);
+            // 
+            // saveAllToolStripMenuItem
+            // 
+            this.saveAllToolStripMenuItem.Name = "saveAllToolStripMenuItem";
+            this.saveAllToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveAllToolStripMenuItem.Text = "Save all";
+            this.saveAllToolStripMenuItem.Click += new System.EventHandler(this.saveAllToolStripMenuItem_Click);
+            // 
+            // cbProtocols
+            // 
+            this.cbProtocols.FormattingEnabled = true;
+            this.cbProtocols.Location = new System.Drawing.Point(603, 89);
+            this.cbProtocols.Name = "cbProtocols";
+            this.cbProtocols.Size = new System.Drawing.Size(287, 21);
+            this.cbProtocols.TabIndex = 25;
             // 
             // DemoForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(908, 505);
-            this.Controls.Add(this.gbProjectInformation);
+            this.ClientSize = new System.Drawing.Size(908, 445);
+            this.Controls.Add(this.cbProtocols);
+            this.Controls.Add(this.lblTags);
+            this.Controls.Add(this.btnResetProtocol);
             this.Controls.Add(this.rtbProtocol);
             this.Controls.Add(this.btnStep);
             this.Controls.Add(this.lblProtocol);
-            this.Controls.Add(this.btnReadOpcData);
-            this.Controls.Add(this.btnSaveData);
+            this.Controls.Add(this.btnReadTags);
+            this.Controls.Add(this.btnSaveTags);
             this.Controls.Add(this.dgvOpcData);
+            this.Controls.Add(this.menuStrip1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MainMenuStrip = this.menuStrip1;
             this.Name = "DemoForm";
             this.Text = "OPC Mock";
             ((System.ComponentModel.ISupportInitialize)(this.dgvOpcData)).EndInit();
-            this.gbProjectInformation.ResumeLayout(false);
-            this.gbProjectInformation.PerformLayout();
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -278,28 +307,31 @@ namespace OpcMock
         #endregion
 
         private System.Windows.Forms.DataGridView dgvOpcData;
-        private System.Windows.Forms.TextBox tbDataFileName;
-        private System.Windows.Forms.Label lblDataFileName;
-        private System.Windows.Forms.Button btnSaveData;
-        private System.Windows.Forms.Button btnReadOpcData;
+        private System.Windows.Forms.Button btnSaveTags;
+        private System.Windows.Forms.Button btnReadTags;
+        private System.Windows.Forms.Label lblProtocol;
+        private System.Windows.Forms.Button btnStep;
+        private System.Windows.Forms.RichTextBox rtbProtocol;
+        private System.Windows.Forms.SaveFileDialog sfdProjectFile;
+        private System.Windows.Forms.Button btnResetProtocol;
         private System.Windows.Forms.DataGridViewTextBoxColumn TagName;
         private System.Windows.Forms.DataGridViewTextBoxColumn TagValue;
         private System.Windows.Forms.DataGridViewComboBoxColumn TagQualityText;
         private System.Windows.Forms.DataGridViewTextBoxColumn TagQualityValue;
-        private System.Windows.Forms.SaveFileDialog sfdDataFile;
-        private System.Windows.Forms.Label lblProtocol;
-        private System.Windows.Forms.Button btnStep;
-        private System.Windows.Forms.RichTextBox rtbProtocol;
-        private System.Windows.Forms.Label lblProjectPath;
-        private System.Windows.Forms.TextBox tbProjectFilePath;
-        private System.Windows.Forms.SaveFileDialog sfdProjectFile;
-        private System.Windows.Forms.Button btnSaveProjectFile;
-        private System.Windows.Forms.Label lblProjectName;
-        private System.Windows.Forms.TextBox tbProjectName;
-        private System.Windows.Forms.FolderBrowserDialog fbdProjectPath;
-        private System.Windows.Forms.Button btnFdbDialog;
-        private System.Windows.Forms.GroupBox gbProjectInformation;
-        private System.Windows.Forms.Button btnCreateProject;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
+        private System.Windows.Forms.OpenFileDialog ofdProjectFile;
+        private System.Windows.Forms.Label lblTags;
+        private System.Windows.Forms.ToolStripMenuItem protocolToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem saveAllToolStripMenuItem;
+        private System.Windows.Forms.ComboBox cbProtocols;
     }
 }
 

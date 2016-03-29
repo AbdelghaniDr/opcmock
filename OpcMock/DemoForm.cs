@@ -11,9 +11,11 @@ namespace OpcMock
     {
         
 
-        private string dataFilePath;
+        //private string dataFilePath;
         private string projectFilePath;
-        private string protocolFilePath;
+        private string projectFolderPath;
+        private OpcMockProject opcMockProject;
+        private ProjectFileWriter projectFileWriter;
 
         private OpcReader opcReader;
         private OpcWriter opcWriter;
@@ -37,44 +39,22 @@ namespace OpcMock
 
         private void InitializeMembers()
         {
-            dataFilePath = string.Empty;
-
-            sfdDataFile.Filter = @"OPC Mock Data|*" + FileExtensionContants.FileExtensionData;
             sfdProjectFile.Filter = @"OPC Mock Project|*" + FileExtensionContants.FileExtensionProject;
 
             currentProtocolLine = 0;
         }
 
-        private void btnDataFileDialog_Click(object sender, EventArgs e)
-        {
-            if (DialogResult.OK.Equals(sfdDataFile.ShowDialog(this)))
-            {
-                dataFilePath = sfdDataFile.FileName;
-                if (!File.Exists(dataFilePath))
-                {
-                    File.Create(dataFilePath).Close();
-                }
-
-                tbDataFileName.Text = dataFilePath;
-
-                opcReader = new OpcReaderCsv(dataFilePath);
-                opcWriter = new OpcWriterCsv(dataFilePath);
-
-                EnableButtonsAfterDataFileLoad();
-            }
-        }
-
         private void btnReadOpcData_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(dataFilePath)) return;
+            if (string.IsNullOrWhiteSpace(DataFilePath())) return;
 
             FillOpcDataGrid(opcReader.ReadAllTags());
         }
 
         private void EnableButtonsAfterDataFileLoad()
         {
-            btnSaveData.Enabled = true;
-            btnReadOpcData.Enabled = true;
+            btnSaveTags.Enabled = true;
+            btnReadTags.Enabled = true;
             btnStep.Enabled = true;
         }
 
@@ -82,20 +62,23 @@ namespace OpcMock
         {
             dgvOpcData.Rows.Clear();
 
-            foreach (OpcTag o in opcTags)
+            foreach (OpcTag opcTag in opcTags)
             {
                 int newRowIndex = dgvOpcData.Rows.Add();
 
-                dgvOpcData.Rows[newRowIndex].Cells[0].Value = o.Path;
-                dgvOpcData.Rows[newRowIndex].Cells[1].Value = o.Value;
-                dgvOpcData.Rows[newRowIndex].Cells[2].Value = o.Quality.ToString();
-                dgvOpcData.Rows[newRowIndex].Cells[3].Value = ((int)o.Quality).ToString();
+                dgvOpcData.Rows[newRowIndex].Cells[0].Value = opcTag.Path;
+                dgvOpcData.Rows[newRowIndex].Cells[1].Value = opcTag.Value;
+                dgvOpcData.Rows[newRowIndex].Cells[2].Value = opcTag.Quality.ToString();
+                dgvOpcData.Rows[newRowIndex].Cells[3].Value = ((int)opcTag.Quality).ToString();
             }
+
+            //Avoid first data cell starting as "Edit" and therefore being cleared
+            dgvOpcData.CurrentCell = dgvOpcData.Rows[dgvOpcData.RowCount - 1].Cells[0];
         }
 
         private void btnSaveData_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(dataFilePath))
+            if (string.IsNullOrEmpty(DataFilePath()))
             {
                 MessageBox.Show(Resources.DemoForm_btnSaveData_Click_Set_target_file_tagPath_);
                 
@@ -108,15 +91,19 @@ namespace OpcMock
         private void WriteDataToFile()
         {
             if (dgvOpcData.Rows.Count <= 0) return;
-
-            List<OpcTag> tagDataFromDgv = (from DataGridViewRow dgvr in dgvOpcData.Rows
-                                           where (dgvr.Index < dgvOpcData.Rows.Count - 1 
-                                                    && dgvr.Cells[0].Value != null
-                                                    && dgvr.Cells[1].Value != null)
-                                           let qualityFromInt = (OpcTag.OpcTagQuality) Convert.ToInt32(dgvr.Cells[3].FormattedValue)
-                                           select new OpcTag(dgvr.Cells[0].Value.ToString(), dgvr.Cells[1].Value.ToString(), qualityFromInt)).ToList();
+            List<OpcTag> tagDataFromDgv = GenerateTagListFromDataGridView();
 
             opcWriter.WriteAllTags(tagDataFromDgv);
+        }
+
+        private List<OpcTag> GenerateTagListFromDataGridView()
+        {
+            return (from DataGridViewRow dgvr in dgvOpcData.Rows
+                    where (dgvr.Index < dgvOpcData.Rows.Count - 1
+                             && dgvr.Cells[0].Value != null
+                             && dgvr.Cells[1].Value != null)
+                    let qualityFromInt = (OpcTag.OpcTagQuality)Convert.ToInt32(dgvr.Cells[3].FormattedValue)
+                    select new OpcTag(dgvr.Cells[0].Value.ToString(), dgvr.Cells[1].Value.ToString(), qualityFromInt)).ToList();
         }
 
         void dgvOpcData_CurrentCellDirtyStateChanged(object sender, EventArgs e)
@@ -135,15 +122,20 @@ namespace OpcMock
 
         private void btnStep_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(dataFilePath)) return;
+            if (string.IsNullOrWhiteSpace(DataFilePath())) return;
 
-            string lineToExecute = rtbProtocol.Lines[currentProtocolLine];
-
-            ExecuteProtocolLine(lineToExecute);
+            ExecuteProtocolLine();
         }
 
-        private void ExecuteProtocolLine(string lineToExecute) 
+        private static bool IsEndOfProtocol(string lineToExecute)
         {
+            return string.IsNullOrWhiteSpace(lineToExecute);
+        }
+
+        private void ExecuteProtocolLine() 
+        {
+            string lineToExecute = rtbProtocol.Lines[currentProtocolLine];
+
             try
             {
                 ProtocolLine protocolLine = new ProtocolLine(lineToExecute);
@@ -161,7 +153,7 @@ namespace OpcMock
                     IncrementCurrentProtocolLine();
                 }
             }
-            catch (ProtocolActionException exProtocol)
+            catch (ProtocolActionException)
             {
                 MessageBox.Show("Invalid protocol action for line: " + lineToExecute);
             }
@@ -169,13 +161,16 @@ namespace OpcMock
 
         private void SetSingleTagFromProtocol(ProtocolLine protocolLine)
         {
-            OpcTag.OpcTagQuality qualityFromInt =
-                (OpcTag.OpcTagQuality) Convert.ToInt32(protocolLine.TagQualityInt);
-            opcWriter.WriteSingleTag(new OpcTag(protocolLine.TagPath, protocolLine.TagValue, qualityFromInt));
-
-            FillOpcDataGrid(opcReader.ReadAllTags());
+            opcWriter.WriteSingleTag(new OpcTag(protocolLine.TagPath, protocolLine.TagValue, OpcTagQualityFromInteger(protocolLine.TagQualityInt)));
 
             IncrementCurrentProtocolLine();
+
+            FillOpcDataGrid(opcReader.ReadAllTags());
+        }
+
+        private OpcTag.OpcTagQuality OpcTagQualityFromInteger(string qualityAsString)
+        {
+            return (OpcTag.OpcTagQuality)Convert.ToInt32(qualityAsString);
         }
 
         private void CheckExpectedTagFromProtocol(ProtocolLine protocolLine)
@@ -189,7 +184,6 @@ namespace OpcMock
             if (opcTagList.Contains(tagToCheck))
             {
                 FillOpcDataGrid(opcTagList);
-
                 IncrementCurrentProtocolLine();
             }
         }
@@ -197,44 +191,176 @@ namespace OpcMock
         private void IncrementCurrentProtocolLine()
         {
             currentProtocolLine++;
-            btnStep.Text = "Execute step " + (currentProtocolLine + 1);
-        }
 
-        private void btnSaveProjectFile_Click(object sender, EventArgs e)
-        {
-            ProjectFileWriter pfw = new ProjectFileWriter(tbProjectFilePath.Text, tbProjectName.Text);
-
-            pfw.SaveProjectFileContent();
-        }
-
-        private void btnFdbDialog_Click(object sender, EventArgs e)
-        {
-            DialogResult dialogResult = fbdProjectPath.ShowDialog();
-
-            if (dialogResult.Equals(DialogResult.OK))
+            if (IsEndOfProtocol(rtbProtocol.Lines[currentProtocolLine]))
             {
-                tbProjectFilePath.Text = fbdProjectPath.SelectedPath;
+                btnStep.Text = "Done";
+                btnStep.Enabled = false;
+                btnResetProtocol.Enabled = true;
+            }
+            else
+            {
+                btnStep.Text = "Execute step " + (currentProtocolLine + 1);
             }
         }
 
-        private void btnCreateProject_Click(object sender, EventArgs e)
+        private void btnResetProtocol_Click(object sender, EventArgs e)
         {
-            ProjectFileWriter pfw = new ProjectFileWriter(tbProjectFilePath.Text, tbProjectName.Text);
-            pfw.SaveProjectFileContent();
+            currentProtocolLine = -1;
+            btnResetProtocol.Enabled = false;
 
-            dataFilePath = tbProjectFilePath.Text + Path.DirectorySeparatorChar + tbProjectName.Text + FileExtensionContants.FileExtensionData;
-            if (!File.Exists(dataFilePath))
+            IncrementCurrentProtocolLine();
+            btnStep.Enabled = true;
+        }
+
+        #region File menu handlers
+
+        private void newToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CreateProjectDialog cpd = new CreateProjectDialog();
+            cpd.StartPosition = FormStartPosition.CenterParent;
+
+            if (DialogResult.OK.Equals(cpd.ShowDialog(this)))
             {
-                File.Create(dataFilePath).Close();
+                opcMockProject = cpd.Project;
+                projectFolderPath = cpd.ProjectFolderPath;
+
+                projectFileWriter = new ProjectFileWriter(opcMockProject, projectFolderPath);
+
+                projectFileWriter.Save();
+
+                if (!File.Exists(DataFilePath()))
+                {
+                    File.Create(DataFilePath()).Close();
+                }
+
+                opcReader = new OpcReaderCsv(DataFilePath());
+                opcWriter = new OpcWriterCsv(DataFilePath());
+
+                Text = "OPC Mock - " + opcMockProject.Name;
+                EnableButtonsAfterDataFileLoad();
             }
 
-            tbDataFileName.Text = dataFilePath;
+            cpd.Dispose();
+        }
 
-            opcReader = new OpcReaderCsv(dataFilePath);
-            opcWriter = new OpcWriterCsv(dataFilePath);
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (DialogResult.OK.Equals(ofdProjectFile.ShowDialog(this)))
+            {
+                projectFilePath = ofdProjectFile.FileName;
+                projectFolderPath = Path.GetDirectoryName(projectFilePath);
 
-            EnableButtonsAfterDataFileLoad();
+                ProjectFileReader pfr = new ProjectFileReader(projectFilePath);
 
+                opcMockProject = pfr.OpcMockProject;
+
+                projectFileWriter = new ProjectFileWriter(opcMockProject, projectFolderPath);
+
+                if (!File.Exists(DataFilePath()))
+                {
+                    File.Create(DataFilePath()).Close();
+                }
+
+                opcReader = new OpcReaderCsv(DataFilePath());
+                opcWriter = new OpcWriterCsv(DataFilePath());
+
+                FillOpcDataGrid(opcReader.ReadAllTags());
+
+                Text = "OPC Mock - " + opcMockProject.Name;
+                EnableButtonsAfterDataFileLoad();
+            }
+        }
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            projectFileWriter.Save();
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        #endregion
+
+        private string DataFilePath()
+        {
+            return projectFolderPath + Path.DirectorySeparatorChar + opcMockProject.Name + FileExtensionContants.FileExtensionData;
+        }
+
+        private string GetProjectFolderPath()
+        {
+            return Path.GetDirectoryName(projectFilePath);
+        }
+
+        private void newToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            CreateProtocolDialog cpd = new CreateProtocolDialog();
+            cpd.StartPosition = FormStartPosition.CenterParent;
+
+            if (DialogResult.OK.Equals(cpd.ShowDialog(this)))
+            {
+                try
+                {
+                    opcMockProject.AddProtocol(cpd.OpcMockProtocol);
+
+                    ///FIXME: Replace this call with an Event/EventListner combination
+                    UpdateProtocolComboBox();
+                }
+                catch (DuplicateProtocolNameException exProtocolName)
+                {
+                    MessageBox.Show(this, exProtocolName.Message + "\n" + exProtocolName.ProtocolName, "Protocol exists", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+
+            cpd.Dispose();
+        }
+
+        private void UpdateProtocolComboBox()
+        {
+            cbProtocols.Items.Clear();
+
+            cbProtocols.Items.Add(string.Empty);
+            cbProtocols.SelectedIndex = 0;
+
+            ///FIXME: Overwrite OpcMockProtocol.ToString() to return the name
+            ///and replace the foreach
+            foreach (OpcMockProtocol omp in opcMockProject.Protocols)
+            {
+                cbProtocols.Items.Add(omp.Name);
+            }
+        }
+
+        private void saveToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            ProtocolWriter protocolWriter = new ProtocolWriter(GetProjectFolderPath(), opcMockProject.Name);
+
+            OpcMockProtocol currentProtocol = new OpcMockProtocol("Current");
+
+            foreach (string line in rtbProtocol.Lines)
+            {
+                try
+                {
+                    currentProtocol.Append(new ProtocolLine(line));
+                }
+                catch(ArgumentException)
+                {
+                    //End of protocol reached
+                }
+            }
+
+            protocolWriter.Save(currentProtocol);
+        }
+
+        private void saveAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ProtocolWriter protocolWriter = new ProtocolWriter(GetProjectFolderPath(), opcMockProject.Name);
+
+            foreach (OpcMockProtocol omp in opcMockProject.Protocols)
+            {
+                protocolWriter.Save(omp);
+            }
         }
     }
 }

@@ -53,13 +53,17 @@
   </Choose>
   <ItemGroup>
     <Compile Include="OpcCsvFileHandlerTests.cs" />
+    <Compile Include="OpcMockProjectTests.cs" />
     <Compile Include="OpcMockTestsBase.cs" />
     <Compile Include="OpcReaderCsvTests.cs" />
     <Compile Include="OpcTagTests.cs" />
     <Compile Include="OpcWriterCsvTests.cs" />
+    <Compile Include="ProjectFileReaderTests.cs" />
     <Compile Include="ProjectFileWriterTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProtocolLineTests.cs" />
+    <Compile Include="ProtocolTests.cs" />
+    <Compile Include="ProtocolWriterTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OpcMock.csproj">
