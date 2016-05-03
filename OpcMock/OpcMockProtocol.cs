@@ -9,8 +9,17 @@ namespace OpcMock
         public string Name { get; internal set; }
         private List<ProtocolLine> lines;
 
+        public delegate void ProtocolLineAddedHandler(ProtocolLineAddedArgs plaArgs);
+
+        public event ProtocolLineAddedHandler OnProtocolLineAdded;
+
         public OpcMockProtocol(string newProtocolName)
         {
+            if (string.IsNullOrWhiteSpace(newProtocolName))
+            {
+                throw new ArgumentException("Parameter must not be an empty string or whitspace-only.", nameof(newProtocolName));
+            }
+
             Name = newProtocolName;
             lines = new List<ProtocolLine>();
         }
@@ -23,6 +32,11 @@ namespace OpcMock
         public void Append(ProtocolLine protocolLine)
         {
             lines.Add(protocolLine);
+
+            if (null != OnProtocolLineAdded)
+            {
+                OnProtocolLineAdded(new ProtocolLineAddedArgs(protocolLine));
+            }
         }
 
         public override bool Equals(object obj)
@@ -44,6 +58,19 @@ namespace OpcMock
         public static bool operator !=(OpcMockProtocol opcMockProtocol1, OpcMockProtocol opcMockProtocol2)
         {
             return !(opcMockProtocol1 == opcMockProtocol2);
+        }
+
+        public override string ToString()
+        {
+            return Name;
+        }
+
+        public void Append(string[] semicolonSeparatedLines)
+        {
+            foreach (string line in semicolonSeparatedLines)
+            {
+                Append(new ProtocolLine(line));
+            }
         }
     }
 }

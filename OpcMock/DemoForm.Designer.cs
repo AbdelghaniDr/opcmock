@@ -40,7 +40,6 @@ namespace OpcMock
             this.btnReadTags = new System.Windows.Forms.Button();
             this.lblProtocol = new System.Windows.Forms.Label();
             this.btnStep = new System.Windows.Forms.Button();
-            this.rtbProtocol = new System.Windows.Forms.RichTextBox();
             this.sfdProjectFile = new System.Windows.Forms.SaveFileDialog();
             this.btnResetProtocol = new System.Windows.Forms.Button();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
@@ -52,11 +51,12 @@ namespace OpcMock
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.protocolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.ofdProjectFile = new System.Windows.Forms.OpenFileDialog();
-            this.lblTags = new System.Windows.Forms.Label();
             this.saveToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ofdProjectFile = new System.Windows.Forms.OpenFileDialog();
+            this.lblTags = new System.Windows.Forms.Label();
             this.cbProtocols = new System.Windows.Forms.ComboBox();
+            this.tbProtocol = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dgvOpcData)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -141,14 +141,6 @@ namespace OpcMock
             this.btnStep.UseVisualStyleBackColor = true;
             this.btnStep.Click += new System.EventHandler(this.btnStep_Click);
             // 
-            // rtbProtocol
-            // 
-            this.rtbProtocol.Location = new System.Drawing.Point(603, 145);
-            this.rtbProtocol.Name = "rtbProtocol";
-            this.rtbProtocol.Size = new System.Drawing.Size(287, 210);
-            this.rtbProtocol.TabIndex = 3;
-            this.rtbProtocol.Text = "Set;tagToSet;newValue;192\nDummy\nWait;tagToWaitFor;expectedValue;192\n";
-            // 
             // btnResetProtocol
             // 
             this.btnResetProtocol.Enabled = false;
@@ -187,7 +179,7 @@ namespace OpcMock
             // 
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
             this.newToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
             this.newToolStripMenuItem.Text = "New";
             this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
             // 
@@ -195,7 +187,7 @@ namespace OpcMock
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
             this.openToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
@@ -203,20 +195,20 @@ namespace OpcMock
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
             this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
             this.saveToolStripMenuItem.Text = "Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(145, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
             this.exitToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -233,9 +225,23 @@ namespace OpcMock
             // newToolStripMenuItem1
             // 
             this.newToolStripMenuItem1.Name = "newToolStripMenuItem1";
-            this.newToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.newToolStripMenuItem1.Size = new System.Drawing.Size(113, 22);
             this.newToolStripMenuItem1.Text = "New";
             this.newToolStripMenuItem1.Click += new System.EventHandler(this.newToolStripMenuItem1_Click);
+            // 
+            // saveToolStripMenuItem1
+            // 
+            this.saveToolStripMenuItem1.Name = "saveToolStripMenuItem1";
+            this.saveToolStripMenuItem1.Size = new System.Drawing.Size(113, 22);
+            this.saveToolStripMenuItem1.Text = "Save";
+            this.saveToolStripMenuItem1.Click += new System.EventHandler(this.saveToolStripMenuItem1_Click);
+            // 
+            // saveAllToolStripMenuItem
+            // 
+            this.saveAllToolStripMenuItem.Name = "saveAllToolStripMenuItem";
+            this.saveAllToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
+            this.saveAllToolStripMenuItem.Text = "Save all";
+            this.saveAllToolStripMenuItem.Click += new System.EventHandler(this.saveAllToolStripMenuItem_Click);
             // 
             // ofdProjectFile
             // 
@@ -250,20 +256,6 @@ namespace OpcMock
             this.lblTags.TabIndex = 24;
             this.lblTags.Text = "Tags";
             // 
-            // saveToolStripMenuItem1
-            // 
-            this.saveToolStripMenuItem1.Name = "saveToolStripMenuItem1";
-            this.saveToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
-            this.saveToolStripMenuItem1.Text = "Save";
-            this.saveToolStripMenuItem1.Click += new System.EventHandler(this.saveToolStripMenuItem1_Click);
-            // 
-            // saveAllToolStripMenuItem
-            // 
-            this.saveAllToolStripMenuItem.Name = "saveAllToolStripMenuItem";
-            this.saveAllToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.saveAllToolStripMenuItem.Text = "Save all";
-            this.saveAllToolStripMenuItem.Click += new System.EventHandler(this.saveAllToolStripMenuItem_Click);
-            // 
             // cbProtocols
             // 
             this.cbProtocols.FormattingEnabled = true;
@@ -271,16 +263,26 @@ namespace OpcMock
             this.cbProtocols.Name = "cbProtocols";
             this.cbProtocols.Size = new System.Drawing.Size(287, 21);
             this.cbProtocols.TabIndex = 25;
+            this.cbProtocols.SelectedIndexChanged += new System.EventHandler(this.cbProtocols_SelectedIndexChanged);
+            // 
+            // tbProtocol
+            // 
+            this.tbProtocol.Location = new System.Drawing.Point(603, 145);
+            this.tbProtocol.Multiline = true;
+            this.tbProtocol.Name = "tbProtocol";
+            this.tbProtocol.Size = new System.Drawing.Size(287, 210);
+            this.tbProtocol.TabIndex = 26;
+            this.tbProtocol.Text = "Set;tagToSet;newValue;192\r\nDummy\r\nWait;tagToWaitFor;expectedValue;192\r\n";
             // 
             // DemoForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(908, 445);
+            this.Controls.Add(this.tbProtocol);
             this.Controls.Add(this.cbProtocols);
             this.Controls.Add(this.lblTags);
             this.Controls.Add(this.btnResetProtocol);
-            this.Controls.Add(this.rtbProtocol);
             this.Controls.Add(this.btnStep);
             this.Controls.Add(this.lblProtocol);
             this.Controls.Add(this.btnReadTags);
@@ -311,7 +313,6 @@ namespace OpcMock
         private System.Windows.Forms.Button btnReadTags;
         private System.Windows.Forms.Label lblProtocol;
         private System.Windows.Forms.Button btnStep;
-        private System.Windows.Forms.RichTextBox rtbProtocol;
         private System.Windows.Forms.SaveFileDialog sfdProjectFile;
         private System.Windows.Forms.Button btnResetProtocol;
         private System.Windows.Forms.DataGridViewTextBoxColumn TagName;
@@ -332,6 +333,7 @@ namespace OpcMock
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem saveAllToolStripMenuItem;
         private System.Windows.Forms.ComboBox cbProtocols;
+        private System.Windows.Forms.TextBox tbProtocol;
     }
 }
 

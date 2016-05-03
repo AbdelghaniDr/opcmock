@@ -45,5 +45,51 @@ namespace OpcMockTests
         {
             Assert.IsTrue(new OpcMockProtocol(PROTOCOL_NAME).Equals(new OpcMockProtocol(PROTOCOL_NAME)));
         }
+
+        [TestMethod]
+        public void ToString_Return_Name()
+        {
+            OpcMockProtocol omp = new OpcMockProtocol(PROTOCOL_NAME);
+
+            Assert.AreEqual(PROTOCOL_NAME, omp.ToString());
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException), "Empty or spaces-only name should not be accepted")]
+        public void Empty_Or_SpacesOnly_Name_Raises_ArgumentException()
+        {
+            OpcMockProtocol omp = new OpcMockProtocol(string.Empty);
+            omp = new OpcMockProtocol("    ");
+            omp = new OpcMockProtocol("\t");
+
+        }
+
+        [TestMethod]
+        public void Adding_A_Line_Raises_LineAdded_Event()
+        {
+            bool eventRaised = false;
+
+            OpcMockProtocol protocol = new OpcMockProtocol(PROTOCOL_NAME);
+
+            protocol.OnProtocolLineAdded += delegate (ProtocolLineAddedArgs plaArgs) { eventRaised = true; };
+
+            protocol.Append(new ProtocolLine("Set;tagPath;tagValue;192"));
+
+            Assert.IsTrue(eventRaised);
+        }
+
+        [TestMethod]
+        public void Append_For_StringArray_Appends_All_Lines()
+        {
+            OpcMockProtocol protocol = new OpcMockProtocol(PROTOCOL_NAME);
+
+            string[] testArray = new string[] { "Set; tagPath1; tagValue; 192", "Set;tagPath2;tagValue;192", "Set;tagPath3;tagValue;192" };
+
+            protocol.Append(testArray);
+
+            Assert.AreEqual(new ProtocolLine("Set;tagPath1;tagValue;192"), protocol.Lines[0]);
+            Assert.AreEqual(new ProtocolLine("Set;tagPath2;tagValue;192"), protocol.Lines[1]);
+            Assert.AreEqual(new ProtocolLine("Set;tagPath3;tagValue;192"), protocol.Lines[2]);
+        }
     }
 }
